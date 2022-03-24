@@ -1,0 +1,54 @@
+pipeline {
+agent any
+
+parameters {
+  string(name: 'name',defaultValue: '',, description: 'Please select the name',trim: true)
+  string(name: 'Branch' ,defaultValue: '',, description: 'Please select the Branch')
+  string(name: 'Deploy', defaultValue: '', description: 'Please select the Deploy')
+}
+stages{
+stage("verification"){
+steps{
+script{
+echo " verification started"
+echo "${params.name}"
+echo "${params.Branch}"
+echo "${params.Deploy}"
+echo "verification completed"
+    }
+
+   }
+  }
+stage("Deployement"){
+   when{
+        expression {params.name == "master" && params.Deploy == "true"}
+       }
+steps{
+script {
+echo "Deployement is started"
+sh 'ssh root@3.145.21.87 /opt/tomcat/bin/shutdown.sh'
+sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/pipeline/target/psdapp.war root@3.145.21.87:/opt/tomcat/webapps'
+sh 'ssh root@3.145.21.87 /opt/tomcat/bin/startup.sh'
+echo "Deployement is completed"
+        }
+       }
+  post {
+ success{
+    mail to: 'naveentanish2@gmail.com',
+    subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is completed",
+    body: "Success Please go to ${BUILD_URL} and check the buils is success or not"
+        }
+  failure{
+    mail to: 'naveentanish2@gmail.com',
+    subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is failure",
+    body: "Failure Please go to ${BUILD_URL} and verify the build"
+         }
+   always{
+    echo "this is always"
+         }
+} 	    
+	   
+     }
+   }
+ }
+
