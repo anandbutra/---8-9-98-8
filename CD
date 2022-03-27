@@ -26,20 +26,20 @@ stage("Deployement"){
 steps{
 script {
 echo "Deployement is started"
-sh 'ssh root@3.145.21.87 /opt/tomcat/bin/shutdown.sh'
-sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/pipeline/target/psdapp.war root@3.145.21.87:/opt/tomcat/webapps'
-sh 'ssh root@3.145.21.87 /opt/tomcat/bin/startup.sh'
+sh 'ssh root@52.14.225.20 /opt/tomcat/bin/shutdown.sh'
+sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/pipeline/target/psdapp.war root@52.14.225.207:/opt/tomcat/webapps'
+sh 'ssh root@52.14.225.20 /opt/tomcat/bin/startup.sh'
 echo "Deployement is completed"
         }
        }
   post {
  success{
-    mail to: 'naveentanish2@gmail.com',
+    mail to: 'anandbutra@gmail.com',
     subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is completed",
     body: "Success Please go to ${BUILD_URL} and check the buils is success or not"
         }
   failure{
-    mail to: 'naveentanish2@gmail.com',
+    mail to: 'anandbutra2@gmail.com',
     subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is failure",
     body: "Failure Please go to ${BUILD_URL} and verify the build"
          }
